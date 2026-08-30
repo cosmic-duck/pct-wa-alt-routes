@@ -100,12 +100,29 @@ FIRES.forEach(fire => {
 
   if (hasSegment) {
     const latlngs = toLatLngs(TRACKS[fire.segmentTrackKey].coords);
-    layer = L.polyline(latlngs, {
-      color: '#c1272d',
-      weight: 7,
+    // Halo underneath (dark, wide) so the highlight reads clearly against
+    // any basemap color, then a bright solid line on top.
+    L.polyline(latlngs, {
+      color: '#5a1010',
+      weight: 14,
       opacity: 0.55,
       lineCap: 'round'
     }).addTo(map);
+    layer = L.polyline(latlngs, {
+      color: '#ff2d2d',
+      weight: 8,
+      opacity: 0.95,
+      lineCap: 'round'
+    }).addTo(map);
+
+    // Fire icon marker at the segment midpoint, for at-a-glance visibility
+    // and an easy tap target at low zoom levels.
+    const midIdx = Math.floor(latlngs.length / 2);
+    const midMarker = L.marker(latlngs[midIdx], { icon: makePoiIcon('#c1272d', 'fire') }).addTo(map);
+    midMarker.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      layer.openPopup(latlngs[midIdx]);
+    });
   } else {
     layer = L.rectangle(fire.bounds, {
       color: '#c1272d',
