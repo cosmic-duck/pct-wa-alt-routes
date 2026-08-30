@@ -3,6 +3,14 @@
 // GPS track exists, or a list of manual waypoints (anchorPoints) if it's
 // an approximate line built from confirmed junction coordinates rather
 // than a recorded track. approxLine: true means it should render dashed.
+//
+// startLabel / endLabel: short names shown in a small native popup when the
+// start/end marker itself is tapped, distinct from the full route panel
+// (which opens when the line itself, or a "full details" link, is tapped).
+//
+// steps: optional ordered array of plain-text directions for routes where
+// a real step-by-step breakdown makes sense. Routes without a steps array
+// only show the "All Information" tab, no Step-by-Step tab is rendered.
 
 const PCT_LINE_COLOR = "#1a5fb4"; // blue, per spec
 
@@ -19,6 +27,8 @@ const ROUTES = [
     statusLabel: "Open, unverified this season",
     miles: 38.9,
     rejoinsPCT: true,
+    startLabel: "Snow Lake Trailhead",
+    endLabel: "Near Skykomish (Hwy 2)",
     rejoinNote: "Ends a few miles west of Skykomish. You have to hitch Hwy 2 east to get back to the actual PCT trailhead at Stevens Pass, this doesn't walk you straight back onto the trail.",
     summary: "PCTA's own posted detour around the closure between Snoqualmie Pass and Deception Pass. Snow Lake, Rock Creek, Middle Fork, Snoqualmie Lake, Dorothy Lake, then out to Hwy 2.",
     body: [
@@ -27,6 +37,16 @@ const ROUTES = [
       "They're upfront that nobody's confirmed it on the ground this year either. Same source: \"This reroute section also includes disclaimers, with a note that it has not been ground truthed by PCTA or USFS staff.\"",
       "One real scheduling snag: the Snow Lake Trail section of this is closed Sept 14 to 25 for planned trail work, so if you're passing through in that window this specific line won't work.",
       "Someone on r/PacificCrestTrail (u/numbershikes) built an actual GPX of this since PCTA only offers it in their own app. That's the track shown here."
+    ],
+    steps: [
+      "Start at Snow Lake Trailhead, north side of Snoqualmie Pass.",
+      "Hike the Snow Lake Trail (closed Sept 14-25 for planned work, check dates before you go).",
+      "Continue onto Rock Creek Trail.",
+      "Follow the Middle Fork Trail.",
+      "Pass Snoqualmie Lake.",
+      "Continue to Dorothy Lake.",
+      "Exit to Highway 2, a few miles west of Skykomish, not at Stevens Pass itself.",
+      "Hitch east on Hwy 2 to reach Stevens Pass and rejoin the PCT."
     ],
     sourceLine: "PCTA closures page (closures.pcta.org) + r/PacificCrestTrail post"
   },
@@ -42,6 +62,8 @@ const ROUTES = [
     statusLabel: "Real trail, includes off-trail scrambling",
     miles: 67.3,
     rejoinsPCT: true,
+    startLabel: "Washington Alpine Club Trailhead",
+    endLabel: "Glacier Lake (back on the PCT)",
     rejoinNote: "Comes back onto the PCT directly at Deception Lake / Glacier Lake. No hitch needed, this is a proper reroute.",
     summary: "Harder and longer than the official reroute, but doesn't dump you on a highway. Goes through Goldmyer Hot Springs, Williams Lake, and a real off-trail scramble past an old mine before dropping into Necklace Valley.",
     body: [
@@ -50,6 +72,20 @@ const ROUTES = [
       "quote::Second trip report, r/PacificCrestTrail::\"Comparatively to the PCT this is a gravelroad whereas the PCT is an interstate... Part of it is a mountaineering trail/route which is some scrambling, there are clearly visible cairns to help you through.\"",
       "I pulled the actual GPX for this one and measured the off-trail stretch directly: 2.28 miles of genuine scrambling, no tread. That's the crux. Everything else is real trail or forest road.",
       "First report's route note worth repeating if you're doing Middle Fork: \"take the bridge after Goldmyer hot springs and take the Dutch Miller gap road to the Horse Camp. I took the trail but it's really overgrown here and was extremely wet.\""
+    ],
+    steps: [
+      "Start at the Washington Alpine Club trailhead near Snoqualmie Pass.",
+      "Climb to Snow Lake.",
+      "Continue on Rock Creek Trail toward Dutch Miller Gap (no water on this stretch).",
+      "Follow the Dutch Miller Gap Trail along the Middle Fork Snoqualmie River, it becomes a gravel road near Goldmyer.",
+      "Pass Goldmyer Hot Springs ($30 day use, cash only, free camping just past the bridge).",
+      "Turn onto Williams Lake Trail, camping available on the shore.",
+      "Climb the Chain Lakes Trail/Route past an old mine, this is the 2.28-mile off-trail scramble, cairned but real scrambling.",
+      "Descend the La Bohme Lakes Route to reach Necklace Valley Trail.",
+      "Drop steeply past Jade Lake, then cross the Foss River (sketchy log crossing or a knee-deep ford).",
+      "Follow the forest road for about 7 miles, roughly 2,000 ft of gain.",
+      "Join Tonga Ridge Trail heading toward Deception Creek.",
+      "Climb to Deception Lake, then Glacier Lake, you're back on the PCT."
     ],
     sourceLine: "Two independent trip reports, r/PacificCrestTrail, Aug 2026 + rider-submitted GPX"
   },
@@ -87,15 +123,29 @@ const ROUTES = [
     statusLabel: "Real, ground-truthed, poorly maintained in spots",
     miles: 30.6,
     rejoinsPCT: true,
+    startLabel: "Bridge Creek Trailhead",
+    endLabel: "Bridge Creek Trailhead (loop closes here)",
     rejoinNote: "This is a full loop starting and ending at Bridge Creek Trailhead, the PCT itself forms part of it. You'd only walk the Rainbow Lake / McAlester Lake portion as your actual detour, not the whole 30.6 miles.",
     summary: "The trail-based way around the Sisi Fire closure near Stehekin. Bridge Creek Trailhead, Rainbow Lake Trail over a pass below Bowan Mountain, McAlester Pass, McAlester Lake, back to the PCT.",
     body: [
       "First flagged in a Reddit comment as a possible workaround. NPS's own Rainbow Creek Trail page backs up the mileage: 18.5 miles one-way between SR 20 and Stehekin Valley Road via McAlester Pass.",
       "quote::AllTrails, McAlester Pass and Rainbow Lake Loop::\"Poorly maintained with fallen trees almost the entire way after mile 3, record setting mosquitoes, washed out bridge crossing from bench creek to rainbow with rapid waters.\"",
       "A Wilderness Permit is required to camp in the North Cascades backcountry portion, this isn't a walk-up-and-camp-anywhere situation.",
-      "I found three different CalTopo maps of this exact loop, which tells me it's genuinely well traveled even outside of fire-closure years. Not some obscure workaround, a known route."
+      "I found three different CalTopo maps of this exact loop, which tells me it's genuinely well traveled even outside of fire-closure years. Not some obscure workaround, a known route.",
+      "The Lodge at Stehekin's own trail page fills in more detail on the pieces of this loop. Rainbow Creek Trail starts 2.5 miles up the Stehekin road from the landing and reaches McAlester Pass (6,017 ft) in 10 miles, with named camps along the way at Rainbow Bridge Camp (2 mi), Rainbow Ford Camp (4.4 mi, a creek crossing), Bench Creek Camp (5.4 mi, junction with Rainbow Lake Trail), Bowan Camp (~7 mi), a ford at 8 mi that's hazardous during early runoff, and McAlester Lake Camp (11 mi, a mile west of the pass). The Rainbow Lake Trail branch off Bench Creek Camp adds its own camps: Rainbow Meadows (8.4 mi), Rainbow Lake (9.9 mi), Dan's Camp (13.9 mi), and South Fork Camp (16.9 mi) where it rejoins Bridge Creek.",
+      "2026 UPDATE: North Cascades Lodge at Stehekin will not offer public services this season (no lodging, food, retail, fuel, laundry, or showers) due to flood damage to the wastewater treatment plant from December 2025. Purple Point and Lakeview Campgrounds remain open, free, first-come first-served. Postal and ferry/shuttle service continue. Don't plan on Stehekin as a normal resupply stop this year, plan on it as a free camping and shuttle stop only."
     ],
-    sourceLine: "NPS Rainbow Creek Trail page, AllTrails reviews, WTA, CalTopo maps"
+    steps: [
+      "Start at Bridge Creek Trailhead on SR 20, near Rainy Pass.",
+      "This is a loop, you can walk it in either direction. Heading via Bridge Creek toward Stehekin: follow Bridge Creek Trail south past North Fork, Six Mile, and South Fork camps.",
+      "At South Fork Camp, pick up Rainbow Lake Trail.",
+      "Climb past Rainbow Lake and over Bowan Pass.",
+      "Continue down to Bench Creek Camp, junction with Rainbow Creek Trail.",
+      "Follow Rainbow Creek Trail up to McAlester Pass (6,017 ft).",
+      "Pass McAlester Lake, about a mile west of the pass.",
+      "Descend McAlester Creek Trail back to Bridge Creek, rejoining the PCT and closing the loop back at the trailhead."
+    ],
+    sourceLine: "NPS Rainbow Creek Trail page, AllTrails reviews, WTA, CalTopo maps, Lodge at Stehekin trail guide, NPS 2026 Stehekin services update"
   },
 
   {
@@ -115,6 +165,8 @@ const ROUTES = [
     statusLabel: "Breaks the footpath, still reaches Canada",
     miles: 21,
     rejoinsPCT: false,
+    startLabel: "Stehekin",
+    endLabel: "War Creek Trailhead",
     rejoinNote: "This doesn't put you back on the PCT on foot. But High Bridge is exactly where NOBO hikers already leave the trail to shuttle into Stehekin for resupply, so this isn't some special detour off your normal route, it's a fork at a stop you're already making. From Stehekin, instead of shuttling back up to the closed section at High Bridge, go over War Creek Pass to Twisp, then TranGO bus north to Winthrop and Mazama. Mazama is the same trailhead town that Monument 90 and Monument 47 both start from, so this connects straight into the rest of the Ptarmigan-area alternates on this map. You lose a continuous footpath through this section, but you don't lose progress toward Canada.",
     summary: "Out of Stehekin (the same stop NOBO hikers already shuttle into from High Bridge), up over Purple Pass, past Lake Juanita, down War Creek Trail to a trailhead outside Twisp, then bus north to Mazama.",
     body: [
@@ -122,11 +174,23 @@ const ROUTES = [
       "quote::Dan_85, r/PacificCrestTrail::\"Alternatively, you could go over War Creek Pass, drop down to Twisp River Road and make your way into the town of Twisp which btw has a great bakery. From Twisp you can hitch or take local bus transit north towards Winthrop and Mazama or south towards Pateros, Chelan and Wenatchee.\"",
       "It's a big day even before you get to a bus. WTA's own trail page puts it at 8 miles and 5,700 ft of climbing just to reach Purple Pass out of Stehekin. Outdoor Project's account matches almost exactly.",
       "quote::Outdoor Project, Purple Pass Hiking Loop::\"The first day climbs about 6,000 feet over 8.1 miles of multiple switchbacks up to Purple Pass from Stehekin. Make sure you have plenty of water, as the next source is not until Juanita Lake, which is your campsite for the night.\"",
+      "The Lodge at Stehekin's own trail page gives a slightly different number for the same climb, 7.4 miles starting from the Golden West Visitor Center at 1200 ft to Purple Pass at 6884 ft, close enough to the other two sources to trust the general shape of the day.",
       "Crossing the pass means leaving National Forest and entering North Cascades National Park, so an NPS backcountry permit is needed if you're overnighting past that point, not just wilderness self-registration.",
       "Once you're actually at the War Creek Trailhead, you're still not in town, it's up a forest road about 14 miles from Twisp River Road. From Twisp, TranGO (Transit for Greater Okanogan) runs a real bus north to Winthrop and Mazama, Monday through Saturday, $1 fare. A 2024 Methow Valley News piece on the route specifically mentions PCT hikers using it: \"Many recreationists use the bus to connect to ski trails or get to the Pacific Crest Trail and other hiking trails, according to TranGO.\"",
+      "2026 UPDATE: Stehekin's North Cascades Lodge is closed all season for flood damage, no lodging, food, fuel, laundry, or showers there this year. Only free camping at Purple Point and Lakeview, plus the shuttle and post office, are actually running. Don't count on resupply in Stehekin itself before you start this climb.",
       "Worth choosing over the McAlester/Rainbow trail alternate if you want an actual town stop, a resupply, and a shot at a hitch or bus instead of more remote backcountry trail. Worth choosing the McAlester/Rainbow alternate instead if keeping a connected footpath through this section matters more to you than a town stop."
     ],
-    sourceLine: "r/PacificCrestTrail (Dan_85, NOBO 2017/2022), WTA, Outdoor Project, Methow Valley News, TranGO schedules"
+    steps: [
+      "Get off the PCT at High Bridge (mm 2571), the same normal shuttle stop into Stehekin.",
+      "From Stehekin, start up Purple Creek Trail, from the southeast side of the Golden West Visitor Center.",
+      "Climb roughly 7.4 to 8.1 miles to Purple Pass (about 6,884 ft). Carry water, the next reliable source is Lake Juanita.",
+      "Continue past Lake Juanita, a common first-night camp.",
+      "Continue northeast on the Summit Trail toward War Creek Pass, in the Okanogan National Forest.",
+      "Descend War Creek Trail to the War Creek Trailhead, about 14 miles up a forest road from Twisp River Road.",
+      "Walk or hitch down the forest road to Twisp River Road, into the town of Twisp.",
+      "Catch the TranGO bus north to Winthrop and Mazama."
+    ],
+    sourceLine: "r/PacificCrestTrail (Dan_85, NOBO 2017/2022), WTA, Outdoor Project, Lodge at Stehekin, Methow Valley News, TranGO schedules, NPS 2026 Stehekin services update"
   },
 
   {
@@ -140,6 +204,8 @@ const ROUTES = [
     statusLabel: "Confirmed open, best-documented route here",
     miles: 55.6,
     rejoinsPCT: false,
+    startLabel: "Mazama",
+    endLabel: "Monument 90",
     rejoinNote: "Ends at a Canadian border monument, not the PCT's official terminus at Monument 78. This is a different, legal-to-reach point on the border.",
     summary: "Mazama, Billy Goat Trailhead, Larch Creek Trail, Park Pass, then up to Monument 90. This was PCTA's own 2022 recommended detour, and it's held up as the go-to option in 2026 too.",
     body: [
@@ -151,6 +217,16 @@ const ROUTES = [
       "2026 trip reports back this up. Rachel Pinsker, end of July: \"It's a good route still and not smoky.\" Etienne Talbot, a couple weeks later: \"The smoke was bad the first day, and blue sky the day I reached the monument. Overall: not so crazy.\"",
       "A separate Reddit post added real road numbers: pavement from Mazama for a couple miles, then ~30 miles of quiet dirt road to the singletrack. There's a dogleg in the road you can bushwhack downhill through for about a third of a mile to cut 3 to 4 miles off, with one easy water crossing right before you rejoin the road.",
       "No cell signal up there. If you're not walking all the way back to Winthrop, you need a Garmin or similar to arrange a shuttle. The Lion's Den in Mazama (trail angel Mary) has helped with this before and will probably remember the route, since it's the same one from 2022."
+    ],
+    steps: [
+      "From Rainy Pass, continue north on the PCT to Harts Pass (this section reopened per the updated Ptarmigan closure).",
+      "Roadwalk from Harts Pass down to Mazama.",
+      "Resupply and rest in Mazama, the Lion's Den and Mazama Store are the usual hiker stops.",
+      "Follow forest service roads from Mazama to the Billy Goat Trailhead, roughly 30 miles. Watch for a dogleg in the road where a 1/3-mile bushwhack shortcut saves 3 to 4 miles.",
+      "Hike the Larch Creek Trail to Park Pass.",
+      "From Park Pass, continue north. Stay east of Peeve Pass, the PNT is closed to the west.",
+      "Find Monument 90 just up the hill from the Park Pass area.",
+      "Arrange a shuttle out (bring a Garmin or satellite messenger, there's no cell signal) or hike back the way you came."
     ],
     sourceLine: "The Trek (thetrek.co), r/PacificCrestTrail (VickyHikesOn + original poster), Methow Valley News"
   },
@@ -166,6 +242,8 @@ const ROUTES = [
     statusLabel: "Confirmed by two independent hikes",
     miles: 127.6,
     rejoinsPCT: false,
+    startLabel: "PCT mm 2505.7 (North Fork Sauk)",
+    endLabel: "Monument 47",
     rejoinNote: "This isn't really a Ptarmigan-specific detour. It leaves the PCT at mm 2505.7, well before Miner's Fire even starts, and walks a mostly separate, road-heavy path west to a different Canadian border monument entirely.",
     summary: "North Fork Sauk exit, through Darrington and Concrete, up through Mt. Baker Wilderness, to Monument 47. Two separate hiking parties did this and wrote it up in detail.",
     body: [
@@ -177,6 +255,17 @@ const ROUTES = [
       "A second, independent party (Mercury and Ibex, reached the border Aug 8) took a different fork near Lake Ann, forest roads instead of the Canyon Ridge Trail: Lake Ann Trailhead, Mt. Baker Highway, Forest Road 31, Forest Road 3140, then National Forest Development Road 045, straight to the border.",
       "quote::Mercury & Ibex::\"We followed Early Bird's great instructions for this bit... The bushwhacking portion does have some old pink flagging tape that leads to Monument 47, so that was helpful as well during our treasure hunt.\"",
       "Monument 47 itself: 49.000089, -121.93545. A logbook for finishers was left at the monument by another hiking party (\"Early Bird's\" group)."
+    ],
+    steps: [
+      "Leave the PCT at mm 2505.7 via the North Fork Sauk River Trail.",
+      "Follow Road 49/Sloan Creek Road, then NF-20, toward Darrington, about 14 miles of gravel and dirt.",
+      "Resupply in Darrington (motel, hardware store, grocery).",
+      "Roadwalk the Mountain Loop Highway/Hwy 530 toward Rockport and Concrete, about 13 miles.",
+      "Resupply in Concrete (5b's Bakery, grocery, free showers at the Community Center).",
+      "Continue roadwalking toward the Mt. Baker Highway / Lake Ann area, joining the PNT-adjacent tread over Austin Pass.",
+      "Take the High Divide Trail up to Welcome Pass to save miles and skip some roadwalk.",
+      "Continue on Canyon Ridge Trail toward the border, watch for camps and water sources along the ridge.",
+      "Follow the old pink flagging tape for the final bushwhack to Monument 47."
     ],
     sourceLine: "r/PacificCrestTrail / PCT Class of 2026 Facebook group, two independent trip reports"
   },
@@ -192,6 +281,8 @@ const ROUTES = [
     statusLabel: "Anchored to confirmed junctions, not a recorded track",
     miles: 35.7,
     rejoinsPCT: false,
+    startLabel: "Lake Ann Trailhead",
+    endLabel: "Monument 47",
     rejoinNote: "Same endpoint as the main Monument 47 route, just a different way through the Mt. Baker area avoiding Canyon Ridge Trail.",
     summary: "The fork Mercury and Ibex took instead of Canyon Ridge Trail: Lake Ann Trailhead, Mt. Baker Highway, FR 31, FR 3140, NFD 045, to the border.",
     body: [
@@ -199,6 +290,15 @@ const ROUTES = [
       "Junction points, confirmed one at a time: Lake Ann Trailhead (USFS/PNT.org), the FR 31 / FR 3140 junction at the Canyon Creek crossing exactly 7.1 miles up FR 31 (USFS Canyon Ridge Trail page, also confirmed by a dropped pin on OpenStreetMap), the Canyon Ridge Trail west trailhead at the end of FR 3140 (WTA), and the NFD 045 / Road 3140 junction right at the border (also confirmed by dropped pin, sits about 0.8 km south of Monument 47 itself, which tracks with it being the last road junction before the final bushwhack).",
       "quote::Mercury & Ibex::\"This road was paved and in good shape until you cross Canyon Creek, though it is only 1.5 lanes... FR 3140 is gravel and one lane and sees some dirt bike traffic as well.\"",
       "The math checks out as a sanity test: roughly 21 miles Lake Ann to FR 31, plus 7.1 to the FR 3140 junction, plus another 8.2 to the Canyon Ridge west trailhead, comes to about 36.3 miles. The measured line comes out to 35.7. Close enough that I trust this line is actually tracing the real road corridor."
+    ],
+    steps: [
+      "From Lake Ann Trailhead, continue on Mt. Baker Highway toward FR 31.",
+      "Turn onto FR 31 (Canyon Creek Road).",
+      "At mile 7.1, cross Canyon Creek and turn onto FR 3140.",
+      "Follow FR 3140 north to its end near the Canyon Ridge Trail west trailhead.",
+      "Continue onto National Forest Development Road 045.",
+      "Follow NFD 045 to its end near the border.",
+      "Bushwhack the final stretch, following the old pink flagging tape, to Monument 47."
     ],
     sourceLine: "Mercury & Ibex trip report + USFS/WTA junction data, anchor points confirmed individually"
   },
