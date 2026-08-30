@@ -91,6 +91,28 @@ const ROUTES = [
   },
 
   {
+    id: "tonga-ridge-ohv",
+    group: "Three Queens / King Fire",
+    name: "Tonga Ridge OHV Trail (reference)",
+    color: "#a67c52",
+    trackKey: "tongaRidgeOHV",
+    approxLine: true,
+    status: "unofficial",
+    statusLabel: "Motorized trail, reference only",
+    miles: 30.8,
+    rejoinsPCT: null,
+    startLabel: "Tonga Ridge OHV Trail",
+    endLabel: "Tonga Ridge OHV Trail (loop closes here)",
+    rejoinNote: null,
+    summary: "A 30.8-mile OHV (off-highway-vehicle) loop in the Tonga Ridge area, near where the La Bohn Gap alt crosses this same general terrain on foot. This is a motorized trail network, not a hiking route, shown here for context on what else is in this corridor.",
+    body: [
+      "This is a separate dataset from the hiking-trail Tonga Ridge segment referenced in the La Bohn Gap alt's own step-by-step directions. That alt uses a forest road and a piece of Tonga Ridge Trail on foot. This OHV loop is the broader motorized trail network in the same general area.",
+      "Shown here as reference/context rather than folded into the La Bohn Gap route data, since it's a distinct 30.8-mile loop rather than the specific corridor a hiker on that alt would actually walk. If it turns out this OHV network overlaps with a usable hiker shortcut or bail-out option, that's worth a closer look, but as uploaded this is motorized-trail data, not confirmed hiker-relevant routing."
+    ],
+    sourceLine: "User-submitted GPX, Tonga Ridge OHV Trail"
+  },
+
+  {
     id: "miners-gap",
     group: "Miner's Fire",
     name: "No confirmed alternate",
@@ -153,17 +175,11 @@ const ROUTES = [
     group: "Sisi Fire",
     name: "War Creek Pass to Twisp, then bus to Mazama",
     color: "#8a5a00",
-    trackKey: null,
-    anchorPoints: [
-      [-120.65528, 48.30944],
-      [-120.65530, 48.30763],
-      [-120.59871, 48.31708],
-      [-120.41663, 48.35834]
-    ],
+    trackKey: "warCreekPass",
     approxLine: true,
     status: "caution",
     statusLabel: "Breaks the footpath, still reaches Canada",
-    miles: 21,
+    miles: 17.2,
     rejoinsPCT: false,
     startLabel: "Stehekin",
     endLabel: "War Creek Trailhead",
@@ -178,6 +194,7 @@ const ROUTES = [
       "Crossing the pass means leaving National Forest and entering North Cascades National Park, so an NPS backcountry permit is needed if you're overnighting past that point, not just wilderness self-registration.",
       "Once you're actually at the War Creek Trailhead, you're still not in town, it's up a forest road about 14 miles from Twisp River Road. From Twisp, TranGO (Transit for Greater Okanogan) runs a real bus north to Winthrop and Mazama, Monday through Saturday, $1 fare. A 2024 Methow Valley News piece on the route specifically mentions PCT hikers using it: \"Many recreationists use the bus to connect to ski trails or get to the Pacific Crest Trail and other hiking trails, according to TranGO.\"",
       "2026 UPDATE: Stehekin's North Cascades Lodge is closed all season for flood damage, no lodging, food, fuel, laundry, or showers there this year. Only free camping at Purple Point and Lakeview, plus the shuttle and post office, are actually running. Don't count on resupply in Stehekin itself before you start this climb.",
+      "The line on this map is a real connected route through five confirmed points (Stehekin, the Purple Point Ranger Station, Purple Pass summit, Lake Juanita, and the War Creek Trailhead), not just straight segments between them, so it should actually trace the trail's shape now instead of cutting corners. The measured distance came out to 17.2 miles, shorter than the roughly 21-mile estimate pieced together earlier from separate trailhead-to-trailhead figures, treat the sourced mileage breakdowns above (8 miles to the pass, 14 miles of forest road at the far end) as the more granular ground truth, and this line's total as the geometry.",
       "Worth choosing over the McAlester/Rainbow trail alternate if you want an actual town stop, a resupply, and a shot at a hitch or bus instead of more remote backcountry trail. Worth choosing the McAlester/Rainbow alternate instead if keeping a connected footpath through this section matters more to you than a town stop."
     ],
     steps: [
