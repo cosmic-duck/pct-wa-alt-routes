@@ -101,5 +101,13 @@ const REFERENCE_POINTS = [
     lon: -120.6628,
     note: "Reference marker only, not on any alt route on this map.",
     sourceLine: "Wikipedia"
+  },
+  {
+    id: "ref-unnamed-47-40-35",
+    name: "Reference point (47\u00b040'35.3\"N 121\u00b015'46.1\"W)",
+    lat: 47.676472,
+    lon: -121.262806,
+    note: "Added from a raw coordinate with no accompanying label. Sits in the general Alpine Lakes Wilderness area, close to where the La Bohn Gap / Chain Lakes alt and the Tonga Ridge corridor pass through. Not yet tied to a specific meaning, waiting on confirmation of what this point actually marks (a camp, junction, water source, etc.) before writing real popup content.",
+    sourceLine: "User-provided coordinate, context not yet confirmed"
   }
 ];
