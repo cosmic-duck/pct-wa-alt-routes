@@ -173,6 +173,48 @@ html, body {
   font-style: italic;
   color: #3a3a34;
 }
+
+.info-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 10px 0 14px 0;
+  background: #f0efe9;
+  border-radius: 10px;
+  padding: 3px;
+}
+.info-tab {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 8px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.info-tab.active { background: white; color: var(--forest-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+.step-list { list-style: none; margin: 0; padding: 0; }
+.step-list li {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: flex-start;
+}
+.step-list li:last-child { border-bottom: none; }
+.step-num {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.step-text { font-size: 14px; line-height: 1.4; padding-top: 2px; }
 .source-tag { font-size: 12px; color: var(--muted); margin: -8px 0 14px 0; }
 .route-actions { display: flex; gap: 10px; margin-top: 4px; }
 .route-actions button {
