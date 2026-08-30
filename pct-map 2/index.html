@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PCT WA Alt Routes</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Top banner, FarOut style -->
+<div id="top-banner">
+  <button id="menu-btn" class="icon-btn" aria-label="Menu">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </button>
+  <div id="banner-title">PCT: Washington Alt Routes</div>
+  <button id="legend-btn" class="icon-btn" aria-label="Legend">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </button>
+</div>
+
+<!-- Map -->
+<div id="map"></div>
+
+<!-- Right side floating tool stack, FarOut style -->
+<div id="tool-stack">
+  <button id="layers-btn" class="tool-btn" title="Map layers">
+    <svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+  </button>
+  <button id="locate-btn" class="tool-btn" title="Find my location">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+  </button>
+  <button id="offline-btn" class="tool-btn" title="Download current view for offline use">
+    <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
+  </button>
+</div>
+
+<!-- Bottom info panel, FarOut style -->
+<div id="info-panel" class="collapsed">
+  <div id="info-handle"></div>
+  <button id="info-close" aria-label="Close">&times;</button>
+  <div id="info-content">
+    <div class="info-empty">Tap a route or point marker to see details here.</div>
+  </div>
+</div>
+
+<!-- Legend / route list slide-up panel -->
+<div id="legend-panel" class="hidden">
+  <div class="panel-header">
+    <span>Routes &amp; Closures</span>
+    <button id="legend-close" class="icon-btn-dark">&times;</button>
+  </div>
+  <div id="legend-list"></div>
+</div>
+
+<!-- Layers panel -->
+<div id="layers-panel" class="hidden">
+  <div class="panel-header">
+    <span>Basemap</span>
+    <button id="layers-close" class="icon-btn-dark">&times;</button>
+  </div>
+  <div id="layers-list">
+    <button class="layer-option" data-layer="street">Default</button>
+    <button class="layer-option" data-layer="topo">Topo</button>
+    <button class="layer-option" data-layer="satellite">Satellite</button>
+  </div>
+</div>
+
+<div id="loading-toast" class="hidden">Downloading map tiles for offline use&hellip;</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="data/routes.js"></script>
+<script src="data/tracks.js"></script>
+<script src="data/fires.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
