@@ -93,59 +93,86 @@ pctLine.bindPopup(
 );
 
 // ---------- Draw fire zones ----------
+// Each fire draws two layers when data allows:
+// 1. The real perimeter polygon (fetched from NIFC), a filled shape showing
+//    the fire's actual mapped footprint.
+// 2. A bright highlighted segment of the real PCT track, showing exactly
+//    which stretch of trail is closed. These don't have to align exactly
+//    with the polygon edge, so both are shown.
 const fireLayers = {};
 FIRES.forEach(fire => {
-  let layer;
+  const layers = [];
+
+  const perimeter = fire.perimeterKey && typeof PERIMETERS !== 'undefined' ? PERIMETERS[fire.perimeterKey] : null;
+  if (perimeter && perimeter.geometry) {
+    const polyLayer = L.geoJSON(perimeter.geometry, {
+      style: {
+        color: '#8b0000',
+        weight: 2,
+        fillColor: '#c1272d',
+        fillOpacity: 0.35
+      }
+    }).addTo(map);
+    layers.push(polyLayer);
+  }
+
   const hasSegment = fire.segmentTrackKey && TRACKS[fire.segmentTrackKey];
+  let primaryLayer = layers[0]; // popup anchor, prefer the polygon if it exists
 
   if (hasSegment) {
     const latlngs = toLatLngs(TRACKS[fire.segmentTrackKey].coords);
-    // Halo underneath (dark, wide) so the highlight reads clearly against
-    // any basemap color, then a bright solid line on top.
     L.polyline(latlngs, {
       color: '#5a1010',
       weight: 14,
       opacity: 0.55,
       lineCap: 'round'
     }).addTo(map);
-    layer = L.polyline(latlngs, {
+    const segLine = L.polyline(latlngs, {
       color: '#ff2d2d',
       weight: 8,
       opacity: 0.95,
       lineCap: 'round'
     }).addTo(map);
+    layers.push(segLine);
+    if (!primaryLayer) primaryLayer = segLine;
 
-    // Fire icon marker at the segment midpoint, for at-a-glance visibility
-    // and an easy tap target at low zoom levels.
     const midIdx = Math.floor(latlngs.length / 2);
     const midMarker = L.marker(latlngs[midIdx], { icon: makePoiIcon('#c1272d', 'fire') }).addTo(map);
     midMarker.on('click', (e) => {
       L.DomEvent.stopPropagation(e);
-      layer.openPopup(latlngs[midIdx]);
+      primaryLayer.openPopup(latlngs[midIdx]);
     });
-  } else {
-    layer = L.rectangle(fire.bounds, {
+  }
+
+  if (!perimeter && !hasSegment) {
+    // last-resort fallback: rough approximate box, only used if we truly
+    // have neither a real perimeter nor a trail segment for this fire
+    primaryLayer = L.rectangle(fire.bounds, {
       color: '#c1272d',
       weight: 1.5,
       fillColor: '#c1272d',
       fillOpacity: 0.18,
       dashArray: '4,4'
     }).addTo(map);
+    layers.push(primaryLayer);
   }
 
-  const precisionNote = hasSegment
-    ? 'Plotted on the real PCT track, clipped to the nearest confirmed mile markers.'
-    : 'Approximate area, not an official fire perimeter (off-trail, no PCT mile markers to anchor to).';
+  const acresLine = fire.acresNote ? `<br/><span style="color:#a12020;font-size:12px;font-weight:600;">${fire.acresNote}</span>` : '';
+  const precisionNote = perimeter
+    ? 'Red shaded shape is the real, current fire perimeter (NIFC WFIGS, pulled 2026-08-30). Bright red line is the exact closed stretch of PCT.'
+    : (hasSegment
+      ? 'Plotted on the real PCT track, clipped to the nearest confirmed mile markers. No separate mapped fire perimeter for this one yet.'
+      : 'Approximate area, not an official fire perimeter (off-trail, no PCT mile markers to anchor to).');
 
-  layer.bindPopup(
-    `<div style="font-family:inherit;padding:4px;max-width:240px;">
-      <b>${fire.name}</b><br/>
+  const popupHtml = `<div style="font-family:inherit;padding:4px;max-width:240px;">
+      <b>${fire.name}</b>${acresLine}<br/>
       <span style="color:#706b5f;font-size:12.5px;">${fire.mileRange}</span>
       <p style="font-size:13px;margin-top:6px;">${fire.note}</p>
       <p style="font-size:11px;color:#a12020;margin-top:6px;">${precisionNote}</p>
-    </div>`
-  );
-  fireLayers[fire.id] = layer;
+    </div>`;
+
+  layers.forEach(l => l.bindPopup(popupHtml));
+  fireLayers[fire.id] = primaryLayer;
 });
 
 // ---------- Info panel core (shared by routes and standalone POIs) ----------
