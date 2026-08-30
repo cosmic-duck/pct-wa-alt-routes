@@ -61,7 +61,9 @@ function makePoiIcon(color, kind) {
     start: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg>',
     end: '<svg viewBox="0 0 24 24"><path d="M12 2 2 20h20L12 2Z"/></svg>',
     monument: '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="18" rx="1"/></svg>',
-    fire: '<svg viewBox="0 0 24 24"><path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-2-1-3-1-5 2 1 3 4 3 6a5 5 0 0 1-10 0c0-6 5-6 5-10Z"/></svg>'
+    flag: '<svg viewBox="0 0 24 24"><path d="M6 2v20M6 3h12l-3 4 3 4H6"/></svg>',
+    town: '<svg viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12H4Z"/><path d="M9 21v-6h6v6"/></svg>',
+    ref: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>'
   };
   return L.divIcon({
     className: '',
@@ -91,9 +93,6 @@ pctLine.bindPopup(
 );
 
 // ---------- Draw fire zones ----------
-// Where we have a real PCT-based closure segment (fire.segmentTrackKey), draw
-// it as a thick red highlight directly on the actual trail. Otherwise (just
-// Border 2 Fire, which is off-trail) fall back to a rough approximate box.
 const fireLayers = {};
 FIRES.forEach(fire => {
   let layer;
@@ -132,51 +131,19 @@ FIRES.forEach(fire => {
   fireLayers[fire.id] = layer;
 });
 
-// ---------- Draw routes ----------
-const routeLayers = {};
-
-ROUTES.forEach(route => {
-  const latlngs = getRouteLatLngs(route);
-  if (!latlngs) return; // e.g. Miner's Fire / Ross Lake, no line to draw
-
-  const line = L.polyline(latlngs, {
-    color: route.color,
-    weight: 4,
-    opacity: 0.88,
-    dashArray: route.approxLine ? '8,7' : null
-  }).addTo(map);
-
-  line.on('click', (e) => {
-    L.DomEvent.stopPropagation(e);
-    openRoutePanel(route);
-  });
-  routeLayers[route.id] = line;
-
-  // start/end markers
-  const startMarker = L.marker(latlngs[0], { icon: makePoiIcon(route.color, 'start') }).addTo(map);
-  startMarker.on('click', (e) => {
-    L.DomEvent.stopPropagation(e);
-    openRoutePanel(route);
-  });
-
-  const endKind = route.id.includes('monument') ? 'monument' : 'end';
-  const endMarker = L.marker(latlngs[latlngs.length - 1], { icon: makePoiIcon(route.color, endKind) }).addTo(map);
-  endMarker.on('click', (e) => {
-    L.DomEvent.stopPropagation(e);
-    openRoutePanel(route);
-  });
-});
-
-// ---------- Info panel rendering ----------
+// ---------- Info panel core (shared by routes and standalone POIs) ----------
 const infoPanel = document.getElementById('info-panel');
 const infoContent = document.getElementById('info-content');
+let currentRoute = null;
+let currentTab = 'info';
 
 function statusClass(status) {
   return {
     open: 'status-open',
     caution: 'status-caution',
     closed: 'status-closed',
-    unresolved: 'status-unresolved'
+    unresolved: 'status-unresolved',
+    unofficial: 'status-caution'
   }[status] || 'status-unresolved';
 }
 
@@ -190,7 +157,47 @@ function renderBodyLine(line) {
   return `<p>${line}</p>`;
 }
 
+function renderTabs(route) {
+  if (!route.steps || !route.steps.length) return '';
+  return `
+    <div class="info-tabs">
+      <button class="info-tab ${currentTab === 'info' ? 'active' : ''}" onclick="switchTab('info')">All Information</button>
+      <button class="info-tab ${currentTab === 'steps' ? 'active' : ''}" onclick="switchTab('steps')">Step-by-Step</button>
+    </div>`;
+}
+
+function renderStepsList(route) {
+  if (!route.steps || !route.steps.length) return '';
+  const items = route.steps.map((s, i) => `<li><span class="step-num">${i + 1}</span><span class="step-text">${s}</span></li>`).join('');
+  return `<ol class="step-list">${items}</ol>`;
+}
+
+function renderRouteBody(route) {
+  if (currentTab === 'steps' && route.steps && route.steps.length) {
+    return `<div class="route-body">${renderStepsList(route)}</div>`;
+  }
+  const bodyHtml = (route.body || []).map(renderBodyLine).join('');
+  const rejoinHtml = route.rejoinNote
+    ? `<p><b>What happens next:</b> ${route.rejoinNote}</p>`
+    : '';
+  return `<div class="route-body"><p>${route.summary}</p>${rejoinHtml}${bodyHtml}</div>`;
+}
+
 function openRoutePanel(route) {
+  currentRoute = route;
+  currentTab = 'info';
+  renderCurrentPanel();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  renderCurrentPanel();
+}
+
+function renderCurrentPanel() {
+  const route = currentRoute;
+  if (!route) return;
+
   const statusHtml = route.statusLabel
     ? `<span class="status-pill ${statusClass(route.status)}">${route.statusLabel}</span>`
     : '';
@@ -203,26 +210,40 @@ function openRoutePanel(route) {
     statsHtml += `<div class="route-stat"><span class="num">${route.rejoinsPCT ? 'Yes' : 'No'}</span><span class="label">Rejoins PCT</span></div>`;
   }
 
-  const bodyHtml = (route.body || []).map(renderBodyLine).join('');
-  const rejoinHtml = route.rejoinNote
-    ? `<p><b>What happens next:</b> ${route.rejoinNote}</p>`
-    : '';
-
   infoContent.innerHTML = `
     <div class="route-sub">${route.group}</div>
     <div class="route-title">${route.name}</div>
     ${statusHtml}
     ${statsHtml ? `<div class="route-stats">${statsHtml}</div>` : ''}
-    <div class="route-body">
-      <p>${route.summary}</p>
-      ${rejoinHtml}
-      ${bodyHtml}
-    </div>
+    ${renderTabs(route)}
+    ${renderRouteBody(route)}
     <div class="source-tag">Source: ${route.sourceLine}</div>
     <div class="route-actions">
       ${route.trackKey || route.anchorPoints ? `<button class="btn-secondary" onclick="downloadGPX('${route.id}')">Download GPX</button>` : ''}
       <button class="btn-primary" onclick="zoomToRoute('${route.id}')">Zoom to route</button>
     </div>
+  `;
+  infoPanel.classList.add('expanded');
+}
+
+function openRoutePanelById(routeId) {
+  const route = ROUTES.find(r => r.id === routeId);
+  if (route) openRoutePanel(route);
+}
+
+// ---------- Simple POI panel (monuments, towns, reference points) ----------
+function openPoiPanel(poi, kindLabel) {
+  currentRoute = null;
+  const statusHtml = poi.status
+    ? `<span class="status-pill ${statusClass(poi.status)}">${poi.status}</span>`
+    : '';
+  infoContent.innerHTML = `
+    <div class="route-sub">${kindLabel}</div>
+    <div class="route-title">${poi.name}</div>
+    ${statusHtml}
+    ${poi.mileNote ? `<div class="route-stats"><div class="route-stat"><span class="num" style="font-size:13px;">${poi.mileNote}</span></div></div>` : ''}
+    <div class="route-body"><p>${poi.note}</p></div>
+    <div class="source-tag">Source: ${poi.sourceLine}</div>
   `;
   infoPanel.classList.add('expanded');
 }
@@ -252,6 +273,91 @@ function downloadGPX(routeId) {
   a.download = route.id + '.gpx';
   a.click();
   URL.revokeObjectURL(url);
+}
+
+// ---------- Draw routes ----------
+const routeLayers = {};
+
+ROUTES.forEach(route => {
+  const latlngs = getRouteLatLngs(route);
+  if (!latlngs) return; // e.g. Miner's Fire / Ross Lake, no line to draw
+
+  const line = L.polyline(latlngs, {
+    color: route.color,
+    weight: 4,
+    opacity: 0.88,
+    dashArray: route.approxLine ? '8,7' : null
+  }).addTo(map);
+
+  line.on('click', (e) => {
+    L.DomEvent.stopPropagation(e);
+    openRoutePanel(route);
+  });
+  routeLayers[route.id] = line;
+
+  // Start/end markers get their own small named popup, not the full route
+  // panel, since both ends of a route describing itself twice isn't useful.
+  // A button inside the popup opens the full route panel if wanted.
+  const startMarker = L.marker(latlngs[0], { icon: makePoiIcon(route.color, 'start') }).addTo(map);
+  const startName = route.startLabel || route.name;
+  startMarker.bindPopup(
+    `<div style="font-family:inherit;padding:2px;">
+      <b>${startName}</b><br/>
+      <span style="color:#706b5f;font-size:12px;">Start of: ${route.name}</span><br/>
+      <button style="margin-top:6px;padding:5px 10px;border:none;border-radius:6px;background:#2f6b3a;color:white;font-size:12px;cursor:pointer;" onclick="openRoutePanelById('${route.id}')">Full route details</button>
+    </div>`
+  );
+  startMarker.on('click', (e) => L.DomEvent.stopPropagation(e));
+
+  const endKind = route.id.includes('monument') ? 'monument' : 'end';
+  const endMarker = L.marker(latlngs[latlngs.length - 1], { icon: makePoiIcon(route.color, endKind) }).addTo(map);
+  const endName = route.endLabel || route.name;
+  endMarker.bindPopup(
+    `<div style="font-family:inherit;padding:2px;">
+      <b>${endName}</b><br/>
+      <span style="color:#706b5f;font-size:12px;">End of: ${route.name}</span><br/>
+      <button style="margin-top:6px;padding:5px 10px;border:none;border-radius:6px;background:#2f6b3a;color:white;font-size:12px;cursor:pointer;" onclick="openRoutePanelById('${route.id}')">Full route details</button>
+    </div>`
+  );
+  endMarker.on('click', (e) => L.DomEvent.stopPropagation(e));
+});
+
+// ---------- Draw standalone POIs: monuments, towns, reference points ----------
+const poiLayers = { monuments: [], towns: [], reference: [] };
+
+if (typeof MONUMENTS !== 'undefined') {
+  MONUMENTS.forEach(m => {
+    const icon = m.id.includes('makeshift') ? 'flag' : 'monument';
+    const color = m.status === 'closed' ? '#555555' : '#c1272d';
+    const marker = L.marker([m.lat, m.lon], { icon: makePoiIcon(color, icon) }).addTo(map);
+    marker.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      openPoiPanel(m, 'Monument');
+    });
+    poiLayers.monuments.push({ id: m.id, marker, data: m });
+  });
+}
+
+if (typeof TOWNS !== 'undefined') {
+  TOWNS.forEach(t => {
+    const marker = L.marker([t.lat, t.lon], { icon: makePoiIcon('#3d7a9e', 'town') }).addTo(map);
+    marker.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      openPoiPanel(t, 'Town / Resupply');
+    });
+    poiLayers.towns.push({ id: t.id, marker, data: t });
+  });
+}
+
+if (typeof REFERENCE_POINTS !== 'undefined') {
+  REFERENCE_POINTS.forEach(r => {
+    const marker = L.marker([r.lat, r.lon], { icon: makePoiIcon('#999999', 'ref') }).addTo(map);
+    marker.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      openPoiPanel(r, 'Reference');
+    });
+    poiLayers.reference.push({ id: r.id, marker, data: r });
+  });
 }
 
 // ---------- Info panel drag/collapse ----------
@@ -300,6 +406,24 @@ function buildLegend() {
       </div>`;
   });
 
+  if (typeof MONUMENTS !== 'undefined') {
+    MONUMENTS.forEach(m => {
+      html += `<div class="legend-item" data-poi="monuments" data-poi-id="${m.id}">
+          <div class="legend-swatch" style="background:#c1272d"></div>
+          <div class="legend-text"><div class="legend-name">${m.name}</div><div class="legend-meta">Monument</div></div>
+        </div>`;
+    });
+  }
+
+  if (typeof TOWNS !== 'undefined') {
+    TOWNS.forEach(t => {
+      html += `<div class="legend-item" data-poi="towns" data-poi-id="${t.id}">
+          <div class="legend-swatch" style="background:#3d7a9e"></div>
+          <div class="legend-text"><div class="legend-name">${t.name}</div><div class="legend-meta">Town / resupply</div></div>
+        </div>`;
+    });
+  }
+
   legendList.innerHTML = html;
 
   legendList.querySelectorAll('[data-route]').forEach(el => {
@@ -319,6 +443,17 @@ function buildLegend() {
       if (layer) {
         map.fitBounds(layer.getBounds(), { padding: [40, 40] });
         layer.openPopup();
+      }
+    });
+  });
+  legendList.querySelectorAll('[data-poi]').forEach(el => {
+    el.addEventListener('click', () => {
+      const group = poiLayers[el.dataset.poi] || [];
+      const found = group.find(p => p.id === el.dataset.poiId);
+      legendPanel.classList.add('hidden');
+      if (found) {
+        map.setView(found.marker.getLatLng(), 13);
+        found.marker.fire('click');
       }
     });
   });
@@ -441,7 +576,6 @@ async function downloadCurrentViewTiles() {
 
   if ('caches' in window) {
     const cache = await caches.open('pct-tiles-v1');
-    let done = 0;
     await Promise.all(urls.map(async (url) => {
       try {
         const existing = await cache.match(url);
@@ -450,7 +584,6 @@ async function downloadCurrentViewTiles() {
           if (resp.ok) await cache.put(url, resp.clone());
         }
       } catch (e) { /* skip failed tiles, best effort */ }
-      done++;
     }));
   }
 
