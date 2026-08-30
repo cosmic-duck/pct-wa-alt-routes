@@ -2,7 +2,7 @@
 // cache-first (falling back to network) so tiles downloaded via the
 // "download current view" button work when offline later.
 
-const APP_CACHE = 'pct-app-shell-v1';
+const APP_CACHE = 'pct-app-shell-v2';
 const TILE_CACHE = 'pct-tiles-v1';
 
 const APP_SHELL = [
@@ -12,7 +12,8 @@ const APP_SHELL = [
   './app.js',
   './data/routes.js',
   './data/tracks.js',
-  './data/fires.js'
+  './data/fires.js',
+  './data/pois.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -63,21 +64,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // App shell: cache-first so the page itself opens offline
+  // App shell: network-first, so updates show up immediately on next visit
+  // instead of getting stuck behind a stale cache-first response. Falls
+  // back to cache only if the network request actually fails (i.e. offline).
   if (event.request.method === 'GET' && url.startsWith(self.location.origin)) {
     event.respondWith(
-      caches.match(event.request).then((cached) => {
-        return (
-          cached ||
-          fetch(event.request).then((resp) => {
-            if (resp.ok) {
-              const clone = resp.clone();
-              caches.open(APP_CACHE).then((cache) => cache.put(event.request, clone));
-            }
-            return resp;
-          })
-        );
-      })
+      fetch(event.request)
+        .then((resp) => {
+          if (resp.ok) {
+            const clone = resp.clone();
+            caches.open(APP_CACHE).then((cache) => cache.put(event.request, clone));
+          }
+          return resp;
+        })
+        .catch(() => caches.match(event.request))
     );
   }
 });
