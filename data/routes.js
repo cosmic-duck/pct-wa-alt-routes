@@ -142,38 +142,37 @@ const ROUTES = [
     trackKey: "mcalesterLoop",
     approxLine: false,
     status: "caution",
-    statusLabel: "Real, ground-truthed, poorly maintained in spots",
+    statusLabel: "Real, ground-truthed, this is now the only way into Stehekin",
     miles: 30.6,
     rejoinsPCT: true,
     startLabel: "Bridge Creek Trailhead",
     endLabel: "Bridge Creek Trailhead (loop closes here)",
-    rejoinNote: "This is a full loop starting and ending at Bridge Creek Trailhead, the PCT itself forms part of it. You'd only walk the Rainbow Lake / McAlester Lake portion as your actual detour, not the whole 30.6 miles.",
-    summary: "The trail-based way around the Sisi Fire closure near Stehekin. Bridge Creek Trailhead, Rainbow Lake Trail over a pass below Bowan Mountain, McAlester Pass, McAlester Lake, back to the PCT.",
+    rejoinNote: "This is a full loop starting and ending at Bridge Creek Trailhead, near Rainy Pass. As of the expanded Aug 22, 2026 closure, the PCT itself is shut for the entire stretch this loop used to parallel, so you're not choosing this over walking the PCT anymore, walking the PCT here isn't an option at all. You'd get here by bypassing the closure on foot from Rainy Pass (north end, if you're continuing from Harts Pass/Mazama) or by the Darrington/SR-20 road bypass if you're coming from further south. From Bridge Creek Trailhead, this loop, specifically the Rainbow Creek Trail leg, is the real way to reach Stehekin without touching the closed PCT corridor at all.",
+    summary: "The trail-based way into Stehekin now that the PCT itself is closed the whole way there. Bridge Creek Trailhead, Rainbow Lake Trail over a pass below Bowan Mountain, McAlester Pass, McAlester Lake, and Rainbow Creek Trail down toward Stehekin Road.",
     body: [
-      "First flagged in a Reddit comment as a possible workaround. NPS's own Rainbow Creek Trail page backs up the mileage: 18.5 miles one-way between SR 20 and Stehekin Valley Road via McAlester Pass.",
+      "First flagged in a Reddit comment as a possible workaround back when the Sisi closure was just the narrow High Bridge stretch. It's since become the main way in, not just an alternative, now that the Aug 22, 2026 Forest Service order closes the PCT the entire length of the Chelan Ranger District, roughly Suiattle Pass to the Rainy Pass area.",
       "quote::AllTrails, McAlester Pass and Rainbow Lake Loop::\"Poorly maintained with fallen trees almost the entire way after mile 3, record setting mosquitoes, washed out bridge crossing from bench creek to rainbow with rapid waters.\"",
       "A Wilderness Permit is required to camp in the North Cascades backcountry portion, this isn't a walk-up-and-camp-anywhere situation.",
       "I found three different CalTopo maps of this exact loop, which tells me it's genuinely well traveled even outside of fire-closure years. Not some obscure workaround, a known route.",
-      "The Lodge at Stehekin's own trail page fills in more detail on the pieces of this loop. Rainbow Creek Trail starts 2.5 miles up the Stehekin road from the landing and reaches McAlester Pass (6,017 ft) in 10 miles, with named camps along the way at Rainbow Bridge Camp (2 mi), Rainbow Ford Camp (4.4 mi, a creek crossing), Bench Creek Camp (5.4 mi, junction with Rainbow Lake Trail), Bowan Camp (~7 mi), a ford at 8 mi that's hazardous during early runoff, and McAlester Lake Camp (11 mi, a mile west of the pass). The Rainbow Lake Trail branch off Bench Creek Camp adds its own camps: Rainbow Meadows (8.4 mi), Rainbow Lake (9.9 mi), Dan's Camp (13.9 mi), and South Fork Camp (16.9 mi) where it rejoins Bridge Creek.",
-      "2026 UPDATE: North Cascades Lodge at Stehekin will not offer public services this season (no lodging, food, retail, fuel, laundry, or showers) due to flood damage to the wastewater treatment plant from December 2025. Purple Point and Lakeview Campgrounds remain open, free, first-come first-served. Postal and ferry/shuttle service continue. Don't plan on Stehekin as a normal resupply stop this year, plan on it as a free camping and shuttle stop only."
+      "The Lodge at Stehekin's own trail page fills in more detail on the pieces of this loop. Rainbow Creek Trail starts 2.5 miles up the Stehekin road from the landing and reaches McAlester Pass (6,017 ft) in 10 miles, with named camps along the way at Rainbow Bridge Camp (2 mi), Rainbow Ford Camp (4.4 mi, a creek crossing), Bench Creek Camp (5.4 mi, junction with Rainbow Lake Trail), Bowan Camp (~7 mi), a ford at 8 mi that's hazardous during early runoff, and McAlester Lake Camp (11 mi, a mile west of the pass). The Rainbow Lake Trail branch off Bench Creek Camp adds its own camps: Rainbow Meadows (8.4 mi), Rainbow Lake (9.9 mi), Dan's Camp (13.9 mi), and South Fork Camp (16.9 mi) where it rejoins Bridge Creek. That 2.5-mile stretch of Stehekin Road at the Rainbow Creek Trail end is the actual last leg into town.",
+      "2026 UPDATE: North Cascades Lodge at Stehekin will not offer public services this season (no lodging, food, retail, fuel, laundry, or showers) due to flood damage to the wastewater treatment plant from December 2025. Purple Point and Lakeview Campgrounds remain open, free, first-come first-served. Postal and ferry/shuttle service continue, though mail already in Stehekin is currently delayed leaving town while the postmaster works out how to redirect hikers' resupply boxes. Don't plan on Stehekin as a normal resupply stop this year, plan on it as a free camping and shuttle stop only."
     ],
     steps: [
-      "Start at Bridge Creek Trailhead on SR 20, near Rainy Pass.",
-      "This is a loop, you can walk it in either direction. Heading via Bridge Creek toward Stehekin: follow Bridge Creek Trail south past North Fork, Six Mile, and South Fork camps.",
+      "Get to Bridge Creek Trailhead on SR 20, near Rainy Pass. The PCT itself is closed south of here all the way past Stehekin, so this trailhead, not the PCT, is your actual way in.",
+      "Follow Bridge Creek Trail south past North Fork, Six Mile, and South Fork camps.",
       "At South Fork Camp, pick up Rainbow Lake Trail.",
       "Climb past Rainbow Lake and over Bowan Pass.",
       "Continue down to Bench Creek Camp, junction with Rainbow Creek Trail.",
-      "Follow Rainbow Creek Trail up to McAlester Pass (6,017 ft).",
-      "Pass McAlester Lake, about a mile west of the pass.",
-      "Descend McAlester Creek Trail back to Bridge Creek, rejoining the PCT and closing the loop back at the trailhead."
+      "Follow Rainbow Creek Trail down toward Stehekin Road (this is the direction into town, reverse the McAlester Pass leg if you'd rather loop back to Bridge Creek instead).",
+      "The last 2.5 miles are along Stehekin Road itself, into town."
     ],
-    sourceLine: "NPS Rainbow Creek Trail page, AllTrails reviews, WTA, CalTopo maps, Lodge at Stehekin trail guide, NPS 2026 Stehekin services update"
+    sourceLine: "NPS Rainbow Creek Trail page, AllTrails reviews, WTA, CalTopo maps, Lodge at Stehekin trail guide, NPS 2026 Stehekin services update, Aug 22 2026 FS closure order"
   },
 
   {
     id: "sisi-warcreek",
     group: "Sisi Fire",
-    name: "War Creek Pass to Twisp, then bus to Mazama",
+    name: "Stehekin to Twisp via War Creek Pass, then bus to Mazama",
     color: "#8a5a00",
     trackKey: "warCreekPass",
     approxLine: true,
@@ -183,22 +182,23 @@ const ROUTES = [
     rejoinsPCT: false,
     startLabel: "Stehekin",
     endLabel: "War Creek Trailhead",
-    rejoinNote: "This doesn't put you back on the PCT on foot. But High Bridge is exactly where NOBO hikers already leave the trail to shuttle into Stehekin for resupply, so this isn't some special detour off your normal route, it's a fork at a stop you're already making. From Stehekin, instead of shuttling back up to the closed section at High Bridge, go over War Creek Pass to Twisp, then TranGO bus north to Winthrop and Mazama. Mazama is the same trailhead town that Monument 90 and Monument 47 both start from, so this connects straight into the rest of the Ptarmigan-area alternates on this map. You lose a continuous footpath through this section, but you don't lose progress toward Canada.",
-    summary: "Out of Stehekin (the same stop NOBO hikers already shuttle into from High Bridge), up over Purple Pass, past Lake Juanita, down War Creek Trail to a trailhead outside Twisp, then bus north to Mazama.",
+    rejoinNote: "This doesn't put you back on the PCT on foot, and note it starts in Stehekin itself, not at a PCT junction, the PCT approach to Stehekin (High Bridge) is now unreachable, deep inside the expanded closure. You'd need to already be in Stehekin, most likely via the Rainbow/McAlester route on this map, to use this one. From Stehekin, go over War Creek Pass to Twisp, then TranGO bus north to Winthrop and Mazama. Mazama is the same trailhead town that Monument 90 and Monument 47 both start from, so this connects straight into the rest of the Ptarmigan-area alternates on this map. You lose a continuous footpath through this whole stretch, but you don't lose progress toward Canada.",
+    summary: "From Stehekin (reached via the Rainbow/McAlester trail network, not the PCT), up over Purple Pass, past Lake Juanita, down War Creek Trail to a trailhead outside Twisp, then bus north to Mazama.",
     body: [
-      "Original tip, r/PacificCrestTrail, posted by a hiker with NOBO PCT experience in both 2017 and 2022, on the thread about this exact Sisi Fire closure (mm 2571 to 2573, High Bridge to the North Cascades NP boundary):",
+      "Original tip, r/PacificCrestTrail, posted by a hiker with NOBO PCT experience in both 2017 and 2022, on the thread about the Sisi Fire closure back when it was just the narrow High Bridge stretch:",
       "quote::Dan_85, r/PacificCrestTrail::\"Alternatively, you could go over War Creek Pass, drop down to Twisp River Road and make your way into the town of Twisp which btw has a great bakery. From Twisp you can hitch or take local bus transit north towards Winthrop and Mazama or south towards Pateros, Chelan and Wenatchee.\"",
+      "The closure has grown substantially since that comment, an Aug 22, 2026 Forest Service order now closes the PCT the entire length of the Chelan Ranger District, so the original framing of \"get off at High Bridge\" no longer applies, High Bridge itself is deep inside the closed zone now. This route only makes sense once you're already in Stehekin by some other means.",
       "It's a big day even before you get to a bus. WTA's own trail page puts it at 8 miles and 5,700 ft of climbing just to reach Purple Pass out of Stehekin. Outdoor Project's account matches almost exactly.",
       "quote::Outdoor Project, Purple Pass Hiking Loop::\"The first day climbs about 6,000 feet over 8.1 miles of multiple switchbacks up to Purple Pass from Stehekin. Make sure you have plenty of water, as the next source is not until Juanita Lake, which is your campsite for the night.\"",
       "The Lodge at Stehekin's own trail page gives a slightly different number for the same climb, 7.4 miles starting from the Golden West Visitor Center at 1200 ft to Purple Pass at 6884 ft, close enough to the other two sources to trust the general shape of the day.",
       "Crossing the pass means leaving National Forest and entering North Cascades National Park, so an NPS backcountry permit is needed if you're overnighting past that point, not just wilderness self-registration.",
       "Once you're actually at the War Creek Trailhead, you're still not in town, it's up a forest road about 14 miles from Twisp River Road. From Twisp, TranGO (Transit for Greater Okanogan) runs a real bus north to Winthrop and Mazama, Monday through Saturday, $1 fare. A 2024 Methow Valley News piece on the route specifically mentions PCT hikers using it: \"Many recreationists use the bus to connect to ski trails or get to the Pacific Crest Trail and other hiking trails, according to TranGO.\"",
-      "2026 UPDATE: Stehekin's North Cascades Lodge is closed all season for flood damage, no lodging, food, fuel, laundry, or showers there this year. Only free camping at Purple Point and Lakeview, plus the shuttle and post office, are actually running. Don't count on resupply in Stehekin itself before you start this climb.",
-      "The line on this map is a real connected route through five confirmed points (Stehekin, the Purple Point Ranger Station, Purple Pass summit, Lake Juanita, and the War Creek Trailhead), not just straight segments between them, so it should actually trace the trail's shape now instead of cutting corners. The measured distance came out to 17.2 miles, shorter than the roughly 21-mile estimate pieced together earlier from separate trailhead-to-trailhead figures, treat the sourced mileage breakdowns above (8 miles to the pass, 14 miles of forest road at the far end) as the more granular ground truth, and this line's total as the geometry.",
-      "Worth choosing over the McAlester/Rainbow trail alternate if you want an actual town stop, a resupply, and a shot at a hitch or bus instead of more remote backcountry trail. Worth choosing the McAlester/Rainbow alternate instead if keeping a connected footpath through this section matters more to you than a town stop."
+      "2026 UPDATE: Stehekin's North Cascades Lodge is closed all season for flood damage, no lodging, food, fuel, laundry, or showers there this year. Only free camping at Purple Point and Lakeview, plus the shuttle and post office, are actually running, and mail already in Stehekin is currently delayed leaving town. Don't count on resupply in Stehekin itself before you start this climb.",
+      "The line on this map is a real connected route through five confirmed points (Stehekin, the Purple Point Ranger Station, Purple Pass summit, Lake Juanita, and the War Creek Trailhead), not just straight segments between them, so it should actually trace the trail's shape instead of cutting corners. The measured distance came out to 17.2 miles.",
+      "Worth choosing over the McAlester/Rainbow trail loop alone if you want an actual town stop and a resupply, since that loop by itself gets you into Stehekin but not back out toward Canada by any means other than backtracking."
     ],
     steps: [
-      "Get off the PCT at High Bridge (mm 2571), the same normal shuttle stop into Stehekin.",
+      "Get to Stehekin first, most likely via the Rainbow/McAlester route on this map, the PCT itself is closed the whole way there.",
       "From Stehekin, start up Purple Creek Trail, from the southeast side of the Golden West Visitor Center.",
       "Climb roughly 7.4 to 8.1 miles to Purple Pass (about 6,884 ft). Carry water, the next reliable source is Lake Juanita.",
       "Continue past Lake Juanita, a common first-night camp.",
@@ -207,7 +207,7 @@ const ROUTES = [
       "Walk or hitch down the forest road to Twisp River Road, into the town of Twisp.",
       "Catch the TranGO bus north to Winthrop and Mazama."
     ],
-    sourceLine: "r/PacificCrestTrail (Dan_85, NOBO 2017/2022), WTA, Outdoor Project, Lodge at Stehekin, Methow Valley News, TranGO schedules, NPS 2026 Stehekin services update"
+    sourceLine: "r/PacificCrestTrail (Dan_85, NOBO 2017/2022), WTA, Outdoor Project, Lodge at Stehekin, Methow Valley News, TranGO schedules, NPS 2026 Stehekin services update, Aug 22 2026 FS closure order"
   },
 
   {
