@@ -90,6 +90,15 @@ const TOWNS = [
     mileNote: "Nearest town to Rainy Pass (22 mi) and Harts Pass (19 mi)",
     note: "Starting point for both Monument 90 and Monument 47 routes. The Lion's Den (0.6 mi SW of Mazama, 6 Davelaar Dr) is the hiker haven, camping/showers/laundry, trail angels sometimes shuttle to Harts Pass or Rainy Pass. Goat's Beard Mountain Supplies holds packages for $10, right next to the Mazama Store (which has a bakery). Mobile service comes from a single tower near the Lion's Den.",
     sourceLine: "pctwashington.com/resupply, The Trek"
+  },
+  {
+    id: "town-twisp",
+    name: "Twisp, WA",
+    lat: 48.36333,
+    lon: -120.12306,
+    mileNote: "Exit point for the War Creek Pass route, up a forest road from the War Creek Trailhead",
+    note: "The town at the bottom of the War Creek Pass alt, not directly on the PCT corridor, reached by trail from Stehekin and then a forest road from the War Creek Trailhead. Has a real bakery (per the original trip report that flagged this route), and is the pickup point for TranGO (Transit for Greater Okanogan), which runs a real bus north to Winthrop and Mazama Monday through Saturday, $1 fare, connecting straight into the Monument 90 and Monument 47 routes. A 2024 Methow Valley News piece specifically notes PCT hikers using this bus.",
+    sourceLine: "r/PacificCrestTrail (Dan_85), TranGO schedules, Methow Valley News"
   }
 ];
 
