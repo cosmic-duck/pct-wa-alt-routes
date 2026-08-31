@@ -120,3 +120,215 @@ const REFERENCE_POINTS = [
     sourceLine: "User-provided coordinate, context not yet confirmed"
   }
 ];
+
+
+// Access roads: every PCT-intersecting road in Washington, from
+// pctwashington.com/access (current as of the 2026 season), with real
+// coordinates computed from the actual PCT centerline using a multi-point
+// mile-marker calibration (not a single fixed offset, verified against
+// Snoqualmie Pass, Stevens Pass, and Rainy Pass independently). Status
+// values: open, partial (open only part way), closed, or
+// open-only-access (the sole current access point to a section).
+
+const ACCESS_ROADS = [
+  {
+    name: "FR-65 (Panther Creek Campground)",
+    lat: 45.81921,
+    lon: -121.85993,
+    mile: 2185.2,
+    status: "open",
+    note: "Open, paved."
+  },
+  {
+    name: "FR-23 (Williams Mine, from Trout Lake)",
+    lat: 46.18403,
+    lon: -121.61179,
+    mile: 2232.1,
+    status: "open",
+    note: "Open, main road up to Mt Adams area."
+  },
+  {
+    name: "FR 5603 (Potato Hill)",
+    lat: 46.35819,
+    lon: -121.5165,
+    mile: 2254.3,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "FR-2329 (Midway)",
+    lat: 46.37694,
+    lon: -121.49716,
+    mile: 2256.2,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "FR-21 (Walupt Lake Rd)",
+    lat: 46.44017,
+    lon: -121.41116,
+    mile: 2268.0,
+    status: "open",
+    note: "Open, freshly graded."
+  },
+  {
+    name: "Chambers Lake Rd (Snowgrass Trailhead)",
+    lat: 46.51303,
+    lon: -121.46396,
+    mile: 2277.0,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "SR-12 (White Pass)",
+    lat: 46.65906,
+    lon: -121.41328,
+    mile: 2298.1,
+    status: "open",
+    note: "Open year-round, no winter closure at this crossing."
+  },
+  {
+    name: "SR-410 (Chinook Pass)",
+    lat: 46.89766,
+    lon: -121.49885,
+    mile: 2326.8,
+    status: "open",
+    note: "Open, reopened for the season May 22."
+  },
+  {
+    name: "NF-7000 (Naches Pass, from SR-410)",
+    lat: 47.10995,
+    lon: -121.40989,
+    mile: 2350.1,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "FR-54 (Stampede/Tacoma Pass)",
+    lat: 47.28756,
+    lon: -121.37685,
+    mile: 2378.1,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "I-90 (Snoqualmie Pass)",
+    lat: 47.43494,
+    lon: -121.4009,
+    mile: 2396.4,
+    status: "open",
+    note: "Open, the interstate itself, always open barring winter storm closures."
+  },
+  {
+    name: "Cooper Rd (Pete Lake Trailhead)",
+    lat: 47.4883,
+    lon: -121.25228,
+    mile: 2417.0,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "Salmon La Sac Trailhead (Waptus Lake)",
+    lat: 47.5239,
+    lon: -121.13696,
+    mile: 2434.0,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "Cle Elum Valley Rd (Cathedral Pass)",
+    lat: 47.56951,
+    lon: -121.13465,
+    mile: 2441.0,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "Cle Elum Valley Rd (Tucquala Meadows)",
+    lat: 47.62149,
+    lon: -121.1419,
+    mile: 2446.0,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "FR-840 (Surprise Creek)",
+    lat: 47.68323,
+    lon: -121.11793,
+    mile: 2453.8,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "FR-6095 (Tunnel Creek/Hope Lake)",
+    lat: 47.7141,
+    lon: -121.05963,
+    mile: 2459.2,
+    status: "open",
+    note: "Open."
+  },
+  {
+    name: "US-2 (Stevens Pass)",
+    lat: 47.77282,
+    lon: -121.09549,
+    mile: 2467.3,
+    status: "open",
+    note: "Open, the highway itself. Where the Three Queens/King Fire detours end, a hitch east from Skykomish gets you back here."
+  },
+  {
+    name: "FR-67 (Rainy Creek Rd, Smithbrook/Union Gap)",
+    lat: 47.82588,
+    lon: -121.10765,
+    mile: 2475.0,
+    status: "partial",
+    note: "Open only as far as Smithbrook, closed beyond that point. Per pctwashington.com/access: north of Stevens Pass, exit options get thin, plan ahead."
+  },
+  {
+    name: "FR-49 (Sloan Creek Rd, North Fork Sauk)",
+    lat: 48.04858,
+    lon: -121.16116,
+    mile: 2505.7,
+    status: "open-only-access",
+    note: "Open but rough. Per pctwashington.com/access, this is currently the ONLY option for accessing the middle of Section K from the west. This is the trailhead our mm 2505.7 to Monument 47 route and the Miner's/Sisi Darrington bypass both use."
+  },
+  {
+    name: "FR-26 (Suiattle River Trailhead)",
+    lat: 48.1916,
+    lon: -121.04011,
+    mile: 2544.0,
+    status: "closed",
+    note: "CLOSED at milepost 4, 20 miles short of the trailhead, six major washouts, no repair underway. This closes off the western approach to the Miner's Fire area entirely, on top of the fire closure itself."
+  },
+  {
+    name: "Railroad Creek/Lucerne/Holden Village",
+    lat: 48.2329,
+    lon: -120.95087,
+    mile: 2556.0,
+    status: "closed",
+    note: "CLOSED, likely for all of the 2026 season. More than 11 landslides on Railroad Creek Road have shut down both Lucerne and Holden. This rules out the Cloudy Pass/Holden Village/Lucerne ferry bypass as a live option this year."
+  },
+  {
+    name: "Stehekin Valley Rd (High Bridge)",
+    lat: 48.40832,
+    lon: -120.85244,
+    mile: 2575.1,
+    status: "open",
+    note: "Open, shuttle bus running on its normal schedule. This is the road into Stehekin itself, though note Stehekin's own services are separately limited this year (see the Stehekin town marker)."
+  },
+  {
+    name: "SR-20 (Rainy Pass)",
+    lat: 48.54297,
+    lon: -120.7235,
+    mile: 2594.4,
+    status: "open",
+    note: "Reopened June 14 after repairs. This is the highway that connects Darrington to Mazama in one continuous drive, the only practical way across the Miner's/Sisi closure gap."
+  },
+  {
+    name: "Harts Pass Rd",
+    lat: 48.73192,
+    lon: -120.67764,
+    mile: 2625.3,
+    status: "open",
+    note: "Reopened June 24. Leads to the Billy Goat Trailhead approach used by both Monument 90 and Monument 47 routes."
+  },
+];
