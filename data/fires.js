@@ -41,12 +41,12 @@ const FIRES = [
   {
     id: "fire-sisi",
     name: "Sisi Fire",
-    mileRange: "PCT mm 2571 to 2573 (High Bridge to the North Cascades NP boundary)",
-    note: "A short closure right where NOBO hikers already leave the trail to shuttle into Stehekin from High Bridge. See the McAlester Pass loop and the War Creek Pass exit nearby, both of which work with the existing High Bridge / Stehekin shuttle stop rather than around it.",
+    mileRange: "PCT approx mm 2555 to 2590 (Suiattle Pass to the Rainy Pass area), expanded as of an Aug 22, 2026 Forest Service closure order",
+    note: "This closure grew substantially in late August. It's no longer just the narrow High Bridge stretch, the official Forest Service order (effective Aug 22, 2026) closes the PCT for the entire length of the Chelan Ranger District, from where the trail enters the district near Suiattle Pass to where it exits into North Cascades National Park near Rainy Pass. Both directions into and out of Stehekin by PCT are affected, not just the approach from the south. The Agnes Gorge Trail near Stehekin is also named in the same closure order. North Fork Sauk to Darrington still works as an exit and hikers can backtrack from there, but there is currently no way to continue north on the PCT itself toward Stehekin. The McAlester Pass loop and War Creek Pass routes on this map both start from the Rainy Pass side, north of this closure, they're not a way through it. The Stehekin postmaster is working on ways to help hikers redirect resupply packages, and mail already in Stehekin is delayed leaving town.",
     acresNote: "1,849.9 acres (0% contained)",
     segmentTrackKey: "fire-sisi-segment",
     perimeterKey: "fire-sisi",
-    bounds: [[48.20, -120.95], [48.35, -120.70]]
+    bounds: [[48.20, -120.95], [48.53, -120.70]]
   },
   {
     id: "fire-ptarmigan",
