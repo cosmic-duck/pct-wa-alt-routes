@@ -63,7 +63,8 @@ function makePoiIcon(color, kind) {
     monument: '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="18" rx="1"/></svg>',
     flag: '<svg viewBox="0 0 24 24"><path d="M6 2v20M6 3h12l-3 4 3 4H6"/></svg>',
     town: '<svg viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12H4Z"/><path d="M9 21v-6h6v6"/></svg>',
-    ref: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>'
+    ref: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>',
+    road: '<svg viewBox="0 0 24 24"><path d="M5 21 9 3h6l4 18"/><path d="M12 3v18" stroke-dasharray="2,2"/></svg>'
   };
   return L.divIcon({
     className: '',
@@ -367,7 +368,7 @@ ROUTES.forEach(route => {
 });
 
 // ---------- Draw standalone POIs: monuments, towns, reference points ----------
-const poiLayers = { monuments: [], towns: [], reference: [] };
+const poiLayers = { monuments: [], towns: [], reference: [], roads: [] };
 
 if (typeof MONUMENTS !== 'undefined') {
   MONUMENTS.forEach(m => {
@@ -401,6 +402,37 @@ if (typeof REFERENCE_POINTS !== 'undefined') {
       openPoiPanel(r, 'Reference');
     });
     poiLayers.reference.push({ id: r.id, marker, data: r });
+  });
+}
+
+// Access roads: small, lightweight native popups rather than the full
+// bottom panel, since these are simple point facts, not full route stories.
+// Colored by status so open/closed/partial is visible at a glance.
+if (typeof ACCESS_ROADS !== 'undefined') {
+  const roadColors = {
+    open: '#3d7a9e',
+    'open-only-access': '#c99a2e',
+    partial: '#b8860b',
+    closed: '#555555'
+  };
+  ACCESS_ROADS.forEach(r => {
+    const color = roadColors[r.status] || '#3d7a9e';
+    const marker = L.marker([r.lat, r.lon], { icon: makePoiIcon(color, 'road') }).addTo(map);
+    const statusLabel = {
+      open: 'Open',
+      'open-only-access': 'Open, only current access to this section',
+      partial: 'Open partway only',
+      closed: 'Closed'
+    }[r.status] || r.status;
+    marker.bindPopup(
+      `<div style="font-family:inherit;padding:2px;max-width:230px;">
+        <b>${r.name}</b><br/>
+        <span style="color:#706b5f;font-size:12px;">PCT mile ${r.mile} &middot; <b style="color:${color === '#555555' ? '#a12020' : '#2f6b3a'}">${statusLabel}</b></span>
+        <p style="font-size:12.5px;margin-top:6px;">${r.note}</p>
+      </div>`
+    );
+    marker.on('click', (e) => L.DomEvent.stopPropagation(e));
+    poiLayers.roads.push({ id: r.name, marker, data: r });
   });
 }
 
@@ -468,7 +500,26 @@ function buildLegend() {
     });
   }
 
+  if (typeof ACCESS_ROADS !== 'undefined') {
+    const openCount = ACCESS_ROADS.filter(r => r.status === 'open' || r.status === 'open-only-access').length;
+    const closedCount = ACCESS_ROADS.filter(r => r.status === 'closed').length;
+    html += `<div class="legend-item" data-fit-all-roads="1">
+        <div class="legend-swatch" style="background:#3d7a9e"></div>
+        <div class="legend-text"><div class="legend-name">Access Roads (${ACCESS_ROADS.length})</div><div class="legend-meta">${openCount} open, ${closedCount} closed &middot; tap any road marker on the map for details</div></div>
+      </div>`;
+  }
+
   legendList.innerHTML = html;
+
+  legendList.querySelectorAll('[data-fit-all-roads]').forEach(el => {
+    el.addEventListener('click', () => {
+      legendPanel.classList.add('hidden');
+      if (poiLayers.roads.length) {
+        const group = L.featureGroup(poiLayers.roads.map(r => r.marker));
+        map.fitBounds(group.getBounds(), { padding: [40, 40] });
+      }
+    });
+  });
 
   legendList.querySelectorAll('[data-route]').forEach(el => {
     el.addEventListener('click', () => {
