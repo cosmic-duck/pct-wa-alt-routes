@@ -214,7 +214,7 @@ const ROUTES = [
     id: "ptarmigan-monument90",
     group: "Ptarmigan Fire",
     name: "Mazama to Monument 90",
-    color: "#c1272d",
+    color: "#c99a2e",
     trackKey: "monument90",
     approxLine: false,
     status: "open",
