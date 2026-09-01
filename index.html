@@ -21,6 +21,18 @@
   </button>
 </div>
 
+<!-- Search bar, visible by default, collapsible -->
+<div id="search-bar">
+  <svg id="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+  <input id="search-input" type="text" placeholder="Search a place, route, or coordinates&hellip;" autocomplete="off" />
+  <button id="search-clear" class="icon-btn-dark" aria-label="Clear search" style="display:none;">&times;</button>
+  <button id="search-collapse-btn" class="icon-btn-dark" aria-label="Hide search bar">&and;</button>
+</div>
+<button id="search-expand-btn" aria-label="Show search bar" style="display:none;">
+  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+</button>
+<div id="search-results" class="hidden"></div>
+
 <!-- Map -->
 <div id="map"></div>
 
