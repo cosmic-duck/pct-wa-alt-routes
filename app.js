@@ -598,6 +598,206 @@ document.getElementById('menu-btn').addEventListener('click', () => {
   legendPanel.classList.remove('hidden');
 });
 
+// ---------- Search bar ----------
+const searchBar = document.getElementById('search-bar');
+const searchInput = document.getElementById('search-input');
+const searchResultsEl = document.getElementById('search-results');
+const searchClearBtn = document.getElementById('search-clear');
+const searchCollapseBtn = document.getElementById('search-collapse-btn');
+const searchExpandBtn = document.getElementById('search-expand-btn');
+const mapDiv = document.getElementById('map');
+const toolStackDiv = document.getElementById('tool-stack');
+
+let tempSearchPin = null;
+
+function collapseSearchBar() {
+  searchBar.classList.add('hidden-bar');
+  searchExpandBtn.style.display = 'flex';
+  mapDiv.classList.add('search-collapsed');
+  toolStackDiv.classList.add('search-collapsed');
+  map.invalidateSize();
+}
+function expandSearchBar() {
+  searchBar.classList.remove('hidden-bar');
+  searchExpandBtn.style.display = 'none';
+  mapDiv.classList.remove('search-collapsed');
+  toolStackDiv.classList.remove('search-collapsed');
+  map.invalidateSize();
+  searchInput.focus();
+}
+searchCollapseBtn.addEventListener('click', collapseSearchBar);
+searchExpandBtn.addEventListener('click', expandSearchBar);
+
+// Build a flat searchable index from everything already on the map.
+function buildSearchIndex() {
+  const index = [];
+  ROUTES.forEach(r => {
+    const latlngs = getRouteLatLngs(r);
+    if (latlngs) index.push({ name: r.name, meta: r.group, lat: latlngs[0][0], lon: latlngs[0][1], action: () => { openRoutePanel(r); zoomToRoute(r.id); } });
+  });
+  FIRES.forEach(f => {
+    index.push({ name: f.name, meta: 'Fire closure', lat: (f.bounds[0][0]+f.bounds[1][0])/2, lon: (f.bounds[0][1]+f.bounds[1][1])/2, action: () => {
+      const layer = fireLayers[f.id];
+      if (layer) { map.fitBounds(layer.getBounds(), { padding: [40,40] }); layer.openPopup(); }
+    }});
+  });
+  if (typeof MONUMENTS !== 'undefined') MONUMENTS.forEach(m => {
+    index.push({ name: m.name, meta: 'Monument', lat: m.lat, lon: m.lon, action: () => { map.setView([m.lat, m.lon], 14); openPoiPanel(m, 'Monument'); } });
+  });
+  if (typeof TOWNS !== 'undefined') TOWNS.forEach(t => {
+    index.push({ name: t.name, meta: 'Town / resupply', lat: t.lat, lon: t.lon, action: () => { map.setView([t.lat, t.lon], 13); openPoiPanel(t, 'Town / Resupply'); } });
+  });
+  if (typeof REFERENCE_POINTS !== 'undefined') REFERENCE_POINTS.forEach(r => {
+    index.push({ name: r.name, meta: 'Reference', lat: r.lat, lon: r.lon, action: () => { map.setView([r.lat, r.lon], 14); openPoiPanel(r, 'Reference'); } });
+  });
+  if (typeof ACCESS_ROADS !== 'undefined') ACCESS_ROADS.forEach(rd => {
+    index.push({ name: rd.name, meta: 'Access road', lat: rd.lat, lon: rd.lon, action: () => { map.setView([rd.lat, rd.lon], 13); } });
+  });
+  return index;
+}
+const searchIndex = buildSearchIndex();
+
+// ---------- Coordinate parsing ----------
+function parseCoordinateInput(text) {
+  const t = text.trim();
+
+  // Decimal degrees: "47.676, -121.263" or "47.676 -121.263"
+  const decMatch = t.match(/^(-?\d{1,3}(?:\.\d+)?)\s*[, ]\s*(-?\d{1,3}(?:\.\d+)?)$/);
+  if (decMatch) {
+    const lat = parseFloat(decMatch[1]);
+    const lon = parseFloat(decMatch[2]);
+    if (Math.abs(lat) <= 90 && Math.abs(lon) <= 180) return { lat, lon };
+  }
+
+  // DMS: 47°40'35.3"N 121°15'46.1"W  (also accepts ′ ″ and comma between parts)
+  const dmsMatch = t.match(
+    /(\d{1,3})\s*[°]\s*(\d{1,2})\s*['′]\s*(\d{1,2}(?:\.\d+)?)\s*["″]?\s*([NSns])[,\s]+(\d{1,3})\s*[°]\s*(\d{1,2})\s*['′]\s*(\d{1,2}(?:\.\d+)?)\s*["″]?\s*([EWew])/
+  );
+  if (dmsMatch) {
+    const latDeg = parseFloat(dmsMatch[1]), latMin = parseFloat(dmsMatch[2]), latSec = parseFloat(dmsMatch[3]);
+    const latDir = dmsMatch[4].toUpperCase();
+    const lonDeg = parseFloat(dmsMatch[5]), lonMin = parseFloat(dmsMatch[6]), lonSec = parseFloat(dmsMatch[7]);
+    const lonDir = dmsMatch[8].toUpperCase();
+    let lat = latDeg + latMin / 60 + latSec / 3600;
+    let lon = lonDeg + lonMin / 60 + lonSec / 3600;
+    if (latDir === 'S') lat = -lat;
+    if (lonDir === 'W') lon = -lon;
+    return { lat, lon };
+  }
+
+  return null;
+}
+
+function dropCoordinatePin(lat, lon) {
+  if (tempSearchPin) map.removeLayer(tempSearchPin);
+  tempSearchPin = L.marker([lat, lon], { icon: makePoiIcon('#d64545', 'ref') }).addTo(map);
+  tempSearchPin.bindPopup(
+    `<div style="font-family:inherit;padding:2px;">
+      <b>${lat.toFixed(5)}, ${lon.toFixed(5)}</b><br/>
+      <span style="color:#706b5f;font-size:12px;">Tap this pin again to remove it.</span>
+    </div>`
+  );
+  tempSearchPin.on('click', (e) => {
+    L.DomEvent.stopPropagation(e);
+    map.removeLayer(tempSearchPin);
+    tempSearchPin = null;
+  });
+  map.setView([lat, lon], 14);
+  tempSearchPin.openPopup();
+}
+
+// ---------- Nominatim fallback (only for things not already on our map) ----------
+async function searchNominatim(query) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&viewbox=-125,49.1,-116.9,45.4&bounded=0&limit=5`;
+    const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    return data.map(d => ({
+      name: d.display_name.split(',')[0],
+      meta: d.display_name.split(',').slice(1, 3).join(',').trim(),
+      lat: parseFloat(d.lat),
+      lon: parseFloat(d.lon),
+      action: () => map.setView([parseFloat(d.lat), parseFloat(d.lon)], 13)
+    }));
+  } catch (e) {
+    return [];
+  }
+}
+
+function renderSearchResults(results) {
+  if (!results.length) {
+    searchResultsEl.innerHTML = `<div class="search-result-item" style="color:var(--muted);">No matches found.</div>`;
+    searchResultsEl.classList.remove('hidden');
+    return;
+  }
+  searchResultsEl.innerHTML = results.map((r, i) =>
+    `<div class="search-result-item" data-idx="${i}">
+      <div class="sr-name">${r.name}</div>
+      <div class="sr-meta">${r.meta || ''}</div>
+    </div>`
+  ).join('');
+  searchResultsEl.classList.remove('hidden');
+  searchResultsEl.querySelectorAll('.search-result-item[data-idx]').forEach(el => {
+    el.addEventListener('click', () => {
+      const r = results[parseInt(el.dataset.idx)];
+      r.action();
+      searchResultsEl.classList.add('hidden');
+      searchInput.value = r.name;
+      searchClearBtn.style.display = 'block';
+    });
+  });
+}
+
+let searchDebounce = null;
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value;
+  searchClearBtn.style.display = q ? 'block' : 'none';
+  clearTimeout(searchDebounce);
+
+  if (!q.trim()) {
+    searchResultsEl.classList.add('hidden');
+    return;
+  }
+
+  // Coordinates take priority and skip search entirely
+  const coord = parseCoordinateInput(q);
+  if (coord) {
+    searchResultsEl.classList.add('hidden');
+    return;
+  }
+
+  searchDebounce = setTimeout(async () => {
+    const qLower = q.toLowerCase();
+    const localMatches = searchIndex.filter(item => item.name.toLowerCase().includes(qLower)).slice(0, 8);
+    if (localMatches.length) {
+      renderSearchResults(localMatches);
+    } else if (q.trim().length >= 3) {
+      const remote = await searchNominatim(q + ', Washington');
+      renderSearchResults(remote);
+    } else {
+      searchResultsEl.classList.add('hidden');
+    }
+  }, 350);
+});
+
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const coord = parseCoordinateInput(searchInput.value);
+    if (coord) {
+      dropCoordinatePin(coord.lat, coord.lon);
+      searchResultsEl.classList.add('hidden');
+    }
+  }
+});
+
+searchClearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  searchClearBtn.style.display = 'none';
+  searchResultsEl.classList.add('hidden');
+  searchInput.focus();
+});
+
 // ---------- Locate me (one-time) ----------
 let userMarker = null;
 let userAccuracyCircle = null;
