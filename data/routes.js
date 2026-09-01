@@ -339,6 +339,56 @@ const ROUTES = [
       "quote::Dan_85, r/PacificCrestTrail::\"Ross Lake north of Silver Creek, and the entire Hozomeen area, are currently closed due to the Border 2 Fire.\" Confirmed against NPS's own fire closures page. This one's dead regardless of approach until that changes."
     ],
     sourceLine: "r/PacificCrestTrail thread + NPS fire closures page"
-  }
+  },
 
+  {
+    id: "connector-rainypass-mazama",
+    group: "Connector roads",
+    name: "Rainy Pass to Mazama road walk / hitchhike",
+    color: "#d68910",
+    trackKey: "rainyPassToMazama",
+    approxLine: false,
+    status: "open",
+    statusLabel: "Real traced route, 21.4 miles",
+    miles: 21.4,
+    rejoinsPCT: false,
+    startLabel: "Bridge Creek Trailhead / SR-20",
+    endLabel: "Mazama",
+    rejoinNote: "This is the actual road connector between the Rainy Pass area and Mazama. With the Sisi Fire closure now extending all the way up to the Rainy Pass area (see the corrected Sisi Fire zone), this becomes the practical way to keep moving from that end of the closure to Mazama and the Ptarmigan-area routes (Monument 90, Monument 47), by road rather than trail.",
+    summary: "A real, traced 21.4-mile road walk / hitchhike route along SR-20 (North Cascades Highway) connecting Bridge Creek Trailhead near Rainy Pass to the town of Mazama.",
+    body: [
+      "This line is a real traced route, not an approximation, covering the specific stretch of highway between Rainy Pass and Mazama.",
+      "This matters more than it might have a few weeks ago: the Sisi Fire closure has grown to cover the PCT all the way up to the Rainy Pass area (see the Sisi Fire zone on this map, corrected as of an Aug 22, 2026 closure order). A hiker who reaches Rainy Pass now has no trail option continuing north on the PCT itself, this road is the way across to Mazama."
+    ],
+    steps: [
+      "Start at Bridge Creek Trailhead, where SR-20 crosses near Rainy Pass.",
+      "Follow SR-20 (North Cascades Highway) west and then north, road walking or hitchhiking.",
+      "Continue to the town of Mazama.",
+      "From Mazama, pick up the Billy Goat Trailhead approach used by both the Monument 90 and Monument 47 routes."
+    ],
+    sourceLine: "User-submitted GeoJSON, traced route"
+  },
+
+  {
+    id: "connector-stehekin-valley-road",
+    group: "Connector roads",
+    name: "Stehekin Valley Road",
+    color: "#8e6b23",
+    trackKey: "stehekinValleyRoad",
+    approxLine: false,
+    status: "open",
+    statusLabel: "Open, shuttle running normally",
+    miles: 10.9,
+    rejoinsPCT: false,
+    startLabel: "SR-20 / Bridge Creek area",
+    endLabel: "Stehekin",
+    rejoinNote: "This is the actual shuttle road between the Bridge Creek/SR-20 area and Stehekin, real traced geometry, not an approximation. It intersects the PCT at High Bridge, mm 2575.1, and runs 11 miles between bus stops, matching the 10.9 miles measured on this traced line closely.",
+    summary: "The real road into Stehekin from the PCT side, used by the shuttle bus. Confirmed open and running its normal schedule despite flood damage elsewhere in the valley.",
+    body: [
+      "quote::User-provided update::\"This road is open and the shuttle bus is running its normal schedule. December's rains caused Purple Creek to flood, washing out a section of Stehekin Valley Road and destroying the wastewater treatment plant that serves the Landing, North Cascades Lodge, and NPS facilities. The lodge will not open this year, but the Post Office is open. Government assistance is expected to prioritize this repair.\"",
+      "There was also significant damage to Company Creek Road, on the opposite side of the Stehekin River, which doesn't directly affect PCT hikers, repair work there has already begun.",
+      "This matches what we already had noted separately about Stehekin's 2026 season: no lodging, food, retail, fuel, laundry, or showers at North Cascades Lodge, but Purple Point and Lakeview Campgrounds remain open free, and now confirmed, the Post Office is specifically still operating."
+    ],
+    sourceLine: "User-provided update + traced route geometry"
+  }
 ];
